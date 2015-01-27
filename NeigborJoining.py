@@ -7,7 +7,7 @@ class NeigborJoining:
         self.distMatrix = DistanceMatrix(distMatrtix, names)
 
     def __call__(self, *args, **kwargs):
-        L = self.distMatrix.getNames()
+        L = self.distMatrix.columnNames
         tree = Tree()
         tree.name = "root"
         tree.dist = 0
@@ -48,7 +48,7 @@ class NeigborJoining:
             self.distMatrix.appendData(d_km, node_k.name)
 
             iter_count+=1
-            L = self.distMatrix.getNames()
+            L = self.distMatrix.columnNames
 
         last_nodes = tree.get_children()
         d_ij = self.distMatrix.getDistance(last_nodes[0].name, last_nodes[1].name)
