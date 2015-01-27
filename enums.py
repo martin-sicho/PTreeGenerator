@@ -6,4 +6,9 @@ TBAlgorithms = enum(
     , PARSIMONY="Parsimony"
 )
 
+SeqTypes = enum(
+    DNA="DNA sequences"
+    , AA="Amino acid sequences"
+)
+
 
