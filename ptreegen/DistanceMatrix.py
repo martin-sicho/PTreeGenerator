@@ -30,7 +30,7 @@ class DistanceMatrix:
         return list(self._columnNames)
 
     def getSeparation(self, name=None):
-        dist_sum = 0
+        dist_sum = None
         if name:
             idx = self._columnNames.index(name)
             dist_sum = self._distMatrix[idx].sum()
@@ -59,9 +59,6 @@ class DistanceMatrix:
 
     def getName(self, idx):
         return self._columnNames[idx]
-
-    # def getNames(self):
-    #     return list(self._columnNames)
 
     def removeData(self, names):
         indices = (self._columnNames.index(x) for x in names)

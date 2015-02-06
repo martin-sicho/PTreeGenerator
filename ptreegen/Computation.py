@@ -1,5 +1,3 @@
-import math
-
 from Bio import AlignIO
 from Bio.Alphabet import generic_protein, generic_dna
 from Bio.Align import MultipleSeqAlignment
@@ -8,6 +6,7 @@ from Bio.SeqRecord import SeqRecord
 from ptreegen.enums import *
 from NeigborJoining import NeigborJoining
 import distance_functions as dfuncs
+
 
 class Computation:
 
@@ -35,7 +34,7 @@ class Computation:
         self.tree = self.computeTree()
 
     def computeTree(self):
-        if self.algorithm == TBAlgorithms.NJ:
+        if self.algorithm == TreeBuildAlgorithms.NJ:
             return NeigborJoining(self.distanceMatrix, [x.id for x in self.alignment])()
         else:
             raise RuntimeError(self.algorithm + "not implemented.")

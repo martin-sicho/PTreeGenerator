@@ -25,7 +25,7 @@ class TestComputation(TestCase):
 
     def setUp(self):
         self.options = {
-            "algorithm" : ptreegen.TBAlgorithms.NJ
+            "algorithm" : ptreegen.TreeBuildAlgorithms.NJ
             , "seq_type" : ptreegen.SeqTypes.AA
             , "ali_path" : "test_files/keratins_ali.fasta"
             , "include_gaps" : True

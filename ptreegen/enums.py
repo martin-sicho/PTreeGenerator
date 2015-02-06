@@ -1,7 +1,7 @@
 def enum(**enums):
     return type('Enum', (), enums)
 
-TBAlgorithms = enum(
+TreeBuildAlgorithms = enum(
     NJ="Neigbor-joining"
     , PARSIMONY="Parsimony"
 )
