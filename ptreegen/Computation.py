@@ -69,12 +69,13 @@ class Computation:
         for col_idx in range(alignment.get_alignment_length()):
             column = alignment[:,col_idx]
 
+            # removal of columns with gaps
             if not self.includeGaps:
                 if column.find("-") != -1:
                     to_remove.add(col_idx)
-                    continue
 
-            if self.removePoor:
+            # poorly conserved regions removal
+            if self.removePoor and (col_idx not in to_remove):
                 # remove column if it contains too many gaps
                 nongap_ratio = float(len(column) - column.count("-")) / len(column)
                 if nongap_ratio < self.gapCutoff:
@@ -82,13 +83,13 @@ class Computation:
                     continue
 
                 # remove column if there are not enough identical residues
-                all_pairs = math.factorial(len(column) - column.count("-")) / (2.0 * math.factorial((len(column) - column.count("-")) - 2))
+                all_pairs = (len(column) - column.count("-")) * ((len(column) - column.count("-")) - 1) / 2.0
                 identical_pairs = 0
                 for res in set(column):
                     if res != "-":
                         res_count = column.count(res)
                         if res_count > 1:
-                            identical_pairs += math.factorial(res_count) / (2.0 * math.factorial(res_count - 2))
+                            identical_pairs += res_count * (res_count - 1) / 2.0
                 identical_pairs_ratio = identical_pairs / all_pairs
                 if identical_pairs_ratio < self.pairCutoff:
                     to_remove.add(col_idx)
