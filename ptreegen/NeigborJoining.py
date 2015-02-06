@@ -1,5 +1,6 @@
-from DistanceMatrix import DistanceMatrix
 from ete2 import Tree
+
+from DistanceMatrix import DistanceMatrix
 
 class NeigborJoining:
 
