@@ -1,4 +1,4 @@
-import sys
+import unittest
 from unittest import TestCase
 
 import ptreegen
@@ -43,9 +43,6 @@ class TestComputation(TestCase):
         computation = ptreegen.Computation(self.options)
         computation.tree.show()
 
-def main(args):
-    pass
 
-
-if __name__ == "__main__":
-    main(sys.argv)
+if __name__ == '__main__':
+    unittest.main()
