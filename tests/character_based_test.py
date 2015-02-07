@@ -6,10 +6,10 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Align import MultipleSeqAlignment
 
-from ptreegen.Parsimony import SmallParsimony
+from ptreegen.parsimony import SmallParsimony
 
 
-class TestParsimony(unittest.TestCase):
+class TestSmallParsimony(unittest.TestCase):
 
     def setUp(self):
         tree = Tree()
@@ -42,7 +42,7 @@ class TestParsimony(unittest.TestCase):
             ]
         )
 
-    def test_solveSmallParsimony(self):
+    def test_solve(self):
         # self.tree.show()
         parsimony = SmallParsimony(self.tree, self.alignment)
         self.assertEqual(parsimony.cost, 4)

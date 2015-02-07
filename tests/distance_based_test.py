@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 
 import ptreegen
-from ptreegen.NeigborJoining import NeigborJoining
+from ptreegen.neigbor_joining import NeigborJoining
 
 
 class TestNeigborJoining(TestCase):

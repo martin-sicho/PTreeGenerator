@@ -4,7 +4,7 @@ from Bio.Align import MultipleSeqAlignment
 from Bio.SeqRecord import SeqRecord
 
 from ptreegen.enums import *
-from NeigborJoining import NeigborJoining
+from neigbor_joining import NeigborJoining
 import distance_functions as dfuncs
 
 
