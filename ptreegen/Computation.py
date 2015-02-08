@@ -1,5 +1,5 @@
 from Bio import AlignIO
-from Bio.Alphabet import generic_protein, generic_dna
+from Bio.Alphabet import generic_protein, generic_dna, generic_rna
 from Bio.Align import MultipleSeqAlignment
 from Bio.SeqRecord import SeqRecord
 
@@ -11,33 +11,47 @@ import distance_functions as dfuncs
 class Computation:
 
     def __init__(self, options):
-        self.algorithm = options["algorithm"]
+        self.algorithm = None
         self.gapPenalty = None
-        self.gapPenalty = options["gap_penalty"] # cost of gaps when they are included to the distance computation
-        self.includeGaps = options["include_gaps"] # includes gaps into the tree computation
-        self.removePoor = options["remove_poor"] # removes poorly conserved regions
-        self.gapCutoff = options["gap_cutoff"] # at least x% in column are not gaps
-        self.pairCutoff = options["pair_cutoff"] # at least x% of pairs in column are identical
-
+        self.gapPenalty = None
+        self.includeGaps = None
+        self.removePoor = None
+        self.gapCutoff = None
+        self.pairCutoff = None
         self.seqType = None
-        self.seqType = options["seq_type"]
-        if self.seqType == SeqTypes.AA:
-            self.alignment = AlignIO.read(options["ali_path"], "fasta", alphabet=generic_protein)
-        elif self.seqType == SeqTypes.DNA:
-            self.alignment = AlignIO.read(options["ali_path"], "fasta", alphabet=generic_dna)
-        else:
-            raise RuntimeError("Unknown sequence type: " + self.seqType)
-
+        self.parseOptions(options)
         self.alignment = self.cleanAlignment(self.alignment)
         self.distanceMatrix = self.computeDistanceMatrix(self.alignment, dfuncs.p_distance)
-
         self.tree = self.computeTree()
+
+    def parseOptions(self, options):
+        self.algorithm = options["method"]
+        if self.algorithm not in (TreeBuildAlgorithms.NJ, TreeBuildAlgorithms.PARSIMONY):
+            raise RuntimeError("Unknown method: " + self.algorithm)
+        self.gapPenalty = options["gap_penalty"] # cost of gaps when they are included to the distance computation
+        if self.gapPenalty < 0 or self.gapPenalty > 1:
+            raise RuntimeError("Bad gap penalty value. Must be between 0 and 1. Got: " + self.gapPenalty)
+        self.includeGaps = not options["no_gaps"] # includes gaps into the tree computation
+        self.removePoor = not options["no_cleaning"] # removes poorly conserved regions
+        self.gapCutoff = options["gap_cutoff"] # at least x% in column are not gaps
+        if self.gapCutoff < 0 or self.gapCutoff > 1:
+            raise RuntimeError("Bad gap cutoff value. Must be between 0 and 1. Got: " + self.gapCutoff)
+        self.pairCutoff = options["pair_cutoff"] # at least x% of pairs in column are identical
+        self.seqType = options["sequence_type"]
+        if self.seqType == SeqTypes.AA:
+            self.alignment = AlignIO.read(options["alignment_file"], "fasta", alphabet=generic_protein)
+        elif self.seqType == SeqTypes.DNA:
+            self.alignment = AlignIO.read(options["alignment_file"], "fasta", alphabet=generic_dna)
+        elif self.seqType == SeqTypes.RNA:
+            self.alignment = AlignIO.read(options["alignment_file"], "fasta", alphabet=generic_rna)
+        else:
+            raise RuntimeError("Unknown sequence type: " + self.seqType)
 
     def computeTree(self):
         if self.algorithm == TreeBuildAlgorithms.NJ:
             return NeigborJoining(self.distanceMatrix, [x.id for x in self.alignment])()
         else:
-            raise RuntimeError(self.algorithm + "not implemented.")
+            raise RuntimeError(self.algorithm + " not implemented.")
 
     def update(self):
         self.alignment = self.cleanAlignment(self.alignment)

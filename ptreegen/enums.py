@@ -2,13 +2,14 @@ def enum(**enums):
     return type('Enum', (), enums)
 
 TreeBuildAlgorithms = enum(
-    NJ="Neigbor-joining"
-    , PARSIMONY="Parsimony"
+    NJ="NJ"
+    , PARSIMONY="PARSIMONY"
 )
 
 SeqTypes = enum(
-    DNA="DNA sequences"
-    , AA="Amino acid sequences"
+    DNA="DNA"
+    , RNA="RNA"
+    , AA="AA"
 )
 
 

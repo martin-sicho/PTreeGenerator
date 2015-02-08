@@ -25,11 +25,11 @@ class TestComputation(TestCase):
 
     def setUp(self):
         self.options = {
-            "algorithm" : ptreegen.TreeBuildAlgorithms.NJ
-            , "seq_type" : ptreegen.SeqTypes.AA
-            , "ali_path" : "test_files/keratins_ali.fasta"
-            , "include_gaps" : True
-            , "remove_poor" : True
+            "method" : ptreegen.TreeBuildAlgorithms.NJ
+            , "sequence_type" : ptreegen.SeqTypes.AA
+            , "alignment_file" : "test_files/keratins_ali.fasta"
+            , "no_gaps" : False
+            , "no_cleaning" : False
             , "gap_cutoff" : 0.8
             , "pair_cutoff" : 0.3
             , "gap_penalty" : 0.5
@@ -39,7 +39,7 @@ class TestComputation(TestCase):
         computation = ptreegen.Computation(self.options)
         computation.tree.show()
 
-        self.options["include_gaps"] = False
+        self.options["no_gaps"] = True
         computation = ptreegen.Computation(self.options)
         computation.tree.show()
 
