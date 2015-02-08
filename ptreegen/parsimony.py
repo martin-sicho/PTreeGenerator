@@ -1,3 +1,5 @@
+from random import shuffle
+
 from ete2 import Tree
 from Bio.Align import MultipleSeqAlignment
 
@@ -59,13 +61,41 @@ class LargeParsimony:
             quartet_combinations.append(combination)
 
         self._optimalQuartets = self.getOptimalQuartets(quartet_combinations)
-        print quartet_combinations
-        print self._optimalQuartets
+        self.quartetPuzzling()
+
+    def quartetPuzzling(self):
+        seq_ids = self._sequencesDict.keys()
+        shuffle(seq_ids)
+        first_quartet = self._optimalQuartets[self.getQuartetID(seq_ids[0:4])]["topology"]
+        rooted_tree = self.treeFromQuartet(first_quartet)
+        tree = rooted_tree.children[0]
+        tree.add_child(rooted_tree.children[1])
+        # tree.show()
+
+        for i in range(4,len(seq_ids)):
+            self.initEdgeLengths(tree)
+
+            quartets = []
+            for triplet in self.combinationsGenerator(seq_ids[0:i], 3):
+                triplet.append(seq_ids[i])
+                quartets.append(tuple(triplet))
+
+            qt_topos_found = set()
+            for quartet in quartets:
+                optimal_qt_topo_id = self._optimalQuartets[self.getQuartetID(quartet)]["topology_id"]
+                qt_topo_id = self.getTopologyID(quartet)
+                if qt_topo_id == optimal_qt_topo_id and qt_topo_id not in qt_topos_found:
+                    qt_topos_found.add(qt_topo_id)
+                    print quartet
+                    # TODO: increase edge cost on path from quartet[0] to quartet[1] by one
+                    # TODO: choose edge with minimum cost, delete it and add new leaf seq_ids[i]
+
 
     def getOptimalQuartets(self, quartets):
         optimal_quartets = dict()
         for quartet in quartets:
-            quartet_id = "".join(quartet)
+            quartet_id = self.getQuartetID(quartet)
+            assert quartet_id not in optimal_quartets
 
             trees = {tuple(quartet) : self.treeFromQuartet(quartet)}
             for i in range(0,2):
@@ -83,8 +113,25 @@ class LargeParsimony:
                 small_parsimony = SmallParsimony(tree, alignment)
                 if small_parsimony.cost < min_cost:
                     min_cost = small_parsimony.cost
-                    optimal_quartets[quartet_id] = quartet_key
-        return set(optimal_quartets.values())
+                    optimal_quartets[quartet_id] = {
+                        "topology" : quartet_key
+                        , "topology_id" : self.getTopologyID(quartet_key)
+                    }
+        return optimal_quartets
+
+    @staticmethod
+    def getQuartetID(quartet):
+        return "".join(sorted(quartet))
+
+    @staticmethod
+    def getTopologyID(quartet):
+        return LargeParsimony.getQuartetID(quartet[0:2]) + LargeParsimony.getQuartetID(quartet[2:4])
+
+    @staticmethod
+    def initEdgeLengths(tree):
+        tree.dist = 0
+        for desc in tree.iter_descendants():
+            desc.dist = 0
 
     @staticmethod
     def treeFromQuartet(quartet):
@@ -108,3 +155,11 @@ class LargeParsimony:
                 for i in xrange(len(items)):
                     for comb in LargeParsimony.uniqueCombinationsGenerator(items[i+1:], n-1):
                         yield [items[i]] + comb
+    @staticmethod
+    def combinationsGenerator(items, n):
+        if not n:
+            yield []
+        else:
+            for i in xrange(len(items)):
+                for comb in LargeParsimony.combinationsGenerator(items[:i]+items[i+1:],n-1):
+                    yield [items[i]] + comb
