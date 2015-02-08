@@ -63,8 +63,27 @@ class testLargeParsimony(unittest.TestCase):
 
     def test_solve(self):
         parsimony = LargeParsimony(self.alignment)
+        sml_pr = SmallParsimony(parsimony.tree, self.alignment)
+        print sml_pr.cost
         parsimony.tree.show()
 
+# class TestComputation(unittest.TestCase):
+#
+#     def setUp(self):
+#         self.options = {
+#             "algorithm" : ptreegen.TreeBuildAlgorithms.PARSIMONY
+#             , "seq_type" : ptreegen.SeqTypes.AA
+#             , "ali_path" : "test_files/keratins_ali.fasta"
+#             , "include_gaps" : True
+#             , "remove_poor" : True
+#             , "gap_cutoff" : 0.8
+#             , "pair_cutoff" : 0.3
+#             , "gap_penalty" : 0.5
+#         }
+#
+#     def test___init__(self):
+#         computation = ptreegen.Computation(self.options)
+#         computation.tree.show()
 
 if __name__ == '__main__':
     unittest.main()

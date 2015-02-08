@@ -61,7 +61,12 @@ class LargeParsimony:
             quartet_combinations.append(combination)
 
         self._optimalQuartets = self.getOptimalQuartets(quartet_combinations)
-        self.tree = self.quartetPuzzling() # TODO: repeat this a few times and choose consensus tree
+
+        # TODO: repeat this a few times and choose consensus tree
+        # MARGUSH, T., and E R. MCMORRIS. 1981. Consensus n-trees
+        # (http://dx.doi.org/10.1007/BF02459446)
+        # or http://dx.doi.org/10.1007/BF01908061
+        self.tree = self.quartetPuzzling()
 
     def quartetPuzzling(self):
         seq_ids = self._sequencesDict.keys()
