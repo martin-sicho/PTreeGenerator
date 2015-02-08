@@ -86,10 +86,42 @@ class LargeParsimony:
                 qt_topo_id = self.getTopologyID(quartet)
                 if qt_topo_id == optimal_qt_topo_id and qt_topo_id not in qt_topos_found:
                     qt_topos_found.add(qt_topo_id)
-                    print quartet
-                    # TODO: increase edge cost on path from quartet[0] to quartet[1] by one
+                    self.increaseCostOnPath(tree, quartet[0], quartet[1])
                     # TODO: choose edge with minimum cost, delete it and add new leaf seq_ids[i]
 
+    @staticmethod
+    def increaseCostOnPath(tree, start, dest):
+        start_node = tree.search_nodes(name=start)[0]
+        end_node = tree.search_nodes(name=dest)[0]
+        node_from = dict()
+        to_visit = set()
+        visited = set()
+
+        to_visit.add(start_node)
+        node_from[start_node] = None
+        path_found = False
+        while to_visit and not path_found:
+            current = to_visit.pop()
+            neighbors = set(current.children)
+            if current.up:
+                neighbors.add(current.up)
+            for neighbor in neighbors:
+                if neighbor not in visited:
+                    node_from[neighbor] = current
+                    if neighbor == end_node:
+                        path_found = True
+                        break
+                    else:
+                        to_visit.add(neighbor)
+            visited.add(current)
+
+        node = end_node
+        while node:
+            if node.name != "Left":
+                node.dist += 1
+            node = node_from[node]
+
+        # tree.show()
 
     def getOptimalQuartets(self, quartets):
         optimal_quartets = dict()
