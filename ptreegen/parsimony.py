@@ -61,7 +61,7 @@ class LargeParsimony:
             quartet_combinations.append(combination)
 
         self._optimalQuartets = self.getOptimalQuartets(quartet_combinations)
-        self.quartetPuzzling()
+        self.tree = self.quartetPuzzling() # TODO: repeat this a few times and choose consensus tree
 
     def quartetPuzzling(self):
         seq_ids = self._sequencesDict.keys()
@@ -73,7 +73,7 @@ class LargeParsimony:
         # tree.show()
 
         for i in range(4,len(seq_ids)):
-            self.initEdgeLengths(tree)
+            self.initEdgeLengths(tree, 0)
 
             quartets = []
             for triplet in self.combinationsGenerator(seq_ids[0:i], 3):
@@ -87,7 +87,28 @@ class LargeParsimony:
                 if qt_topo_id == optimal_qt_topo_id and qt_topo_id not in qt_topos_found:
                     qt_topos_found.add(qt_topo_id)
                     self.increaseCostOnPath(tree, quartet[0], quartet[1])
-                    # TODO: choose edge with minimum cost, delete it and add new leaf seq_ids[i]
+
+            # choose edge with minimum cost, delete it and add new leaf seq_ids[i]
+            shortest_edge = self.findShortestEdge(tree)
+            new_node = Tree(name=shortest_edge[0].name + "_" + shortest_edge[1].name)
+            new_node.add_child(name=seq_ids[i])
+            detached = shortest_edge[1].detach()
+            shortest_edge[0].add_child(new_node)
+            new_node.add_child(detached)
+            # tree.show()
+
+        self.initEdgeLengths(tree, 1)
+        return tree
+
+    @staticmethod
+    def findShortestEdge(tree):
+        shortest_edge = [None, None]
+        min_dist = float("inf")
+        for node in tree.iter_descendants():
+            if node.dist < min_dist:
+                shortest_edge[0] = node.up
+                shortest_edge[1] = node
+        return tuple(shortest_edge)
 
     @staticmethod
     def increaseCostOnPath(tree, start, dest):
@@ -160,10 +181,10 @@ class LargeParsimony:
         return LargeParsimony.getQuartetID(quartet[0:2]) + LargeParsimony.getQuartetID(quartet[2:4])
 
     @staticmethod
-    def initEdgeLengths(tree):
-        tree.dist = 0
+    def initEdgeLengths(tree, value):
+        tree.dist = value
         for desc in tree.iter_descendants():
-            desc.dist = 0
+            desc.dist = value
 
     @staticmethod
     def treeFromQuartet(quartet):

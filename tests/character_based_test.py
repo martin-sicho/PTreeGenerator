@@ -63,6 +63,7 @@ class testLargeParsimony(unittest.TestCase):
 
     def test_solve(self):
         parsimony = LargeParsimony(self.alignment)
+        parsimony.tree.show()
 
 
 if __name__ == '__main__':
