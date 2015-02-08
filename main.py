@@ -26,7 +26,7 @@ def main(args):
                             )
     arg_parser.add_argument('-g'
                             , '--no-gaps'
-                            , action='store_false'
+                            , action='store_true'
                             , help="Remove all gapped postions from the alignment before tree building.")
     arg_parser.add_argument('-p'
                             , '--gap-penalty'
@@ -35,7 +35,7 @@ def main(args):
                             , help="Gap penalty. Default value is 0.5.")
     arg_parser.add_argument('-c'
                             , '--no-cleaning'
-                            , action='store_false'
+                            , action='store_true'
                             , help="Do not clean badly conserved regions from the alignment before tree building.")
     arg_parser.add_argument('-u'
                             , '--gap-cutoff'
