@@ -1,5 +1,3 @@
-import copy
-
 from ete2 import Tree
 from Bio.Align import MultipleSeqAlignment
 
@@ -60,34 +58,36 @@ class LargeParsimony:
         for combination in LargeParsimony.uniqueCombinationsGenerator(self._sequencesDict.keys(), 4):
             quartet_combinations.append(combination)
 
-        self._optimalQuartets = dict()
-        self.saveOptimalQuartets(quartet_combinations)
+        self._optimalQuartets = self.getOptimalQuartets(quartet_combinations)
         print quartet_combinations
-        print self._optimalQuartets.keys()
+        print self._optimalQuartets
 
-    def saveOptimalQuartets(self, quartets):
+    def getOptimalQuartets(self, quartets):
+        optimal_quartets = dict()
         for quartet in quartets:
             quartet_id = "".join(quartet)
-            quartet_copy = copy.deepcopy(quartet)
-            assert quartet_id not in self._optimalQuartets.keys()
-            trees = [self.treeFromQuartet(quartet_copy)]
+
+            trees = {tuple(quartet) : self.treeFromQuartet(quartet)}
             for i in range(0,2):
-                temp = quartet_copy[i]
-                quartet_copy[i] = quartet_copy[2]
-                quartet_copy[2] = temp
-                trees.append(self.treeFromQuartet(quartet_copy))
+                temp = quartet[i]
+                quartet[i] = quartet[2]
+                quartet[2] = temp
+                trees[tuple(quartet)] = self.treeFromQuartet(quartet)
+
             min_cost = float("inf")
-            for tree in trees:
+            for quartet_key, tree in trees.iteritems():
                 alignment = MultipleSeqAlignment([])
                 for record in self._alignment:
-                    if record.id in quartet_copy:
+                    if record.id in quartet:
                         alignment.append(record)
                 small_parsimony = SmallParsimony(tree, alignment)
                 if small_parsimony.cost < min_cost:
                     min_cost = small_parsimony.cost
-                    self._optimalQuartets[quartet_id] = tree # TODO: try better representation
+                    optimal_quartets[quartet_id] = quartet_key
+        return set(optimal_quartets.values())
 
-    def treeFromQuartet(self, quartet):
+    @staticmethod
+    def treeFromQuartet(quartet):
         root = Tree()
         root.name = "root"
         left = root.add_child(name="Left")
