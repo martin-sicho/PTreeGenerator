@@ -1,10 +1,15 @@
-import sys
+##
+# The main module. Handles the comand line options
+# and delegates actions to other modules.
+
 from argparse import ArgumentParser
 
 import ptreegen
 
-
-def main(args):
+##
+# The main method. First to be executed
+# when the program is run.
+def main():
     description="This is a simple tool for generating phylogenetic trees from multiple sequence alignments. " \
                 "It was created as a school project for a bioinformatics algorithms course."
     epilog = "For more info see the GitHub page (https://github.com/martin-sicho/PTreeGenerator) " \
@@ -78,7 +83,9 @@ def main(args):
     results = ptreegen.Computation(vars(arguments))
     results.tree.show()
 
+    return 0
+
 if __name__ == "__main__":
-    main(sys.argv)
+    exit(main())
 
 

@@ -1,2 +1,2 @@
-from Computation import Computation
+from computation import Computation
 from enums import *

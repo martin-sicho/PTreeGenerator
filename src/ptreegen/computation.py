@@ -1,3 +1,7 @@
+## @package computation
+# Contains just the ptreegen::computation::Computation class.
+#
+
 from Bio import AlignIO
 from Bio.Alphabet import generic_protein, generic_dna, generic_rna
 from Bio.Align import MultipleSeqAlignment
@@ -9,11 +13,20 @@ from neigbor_joining import NeigborJoining
 from ptreegen.parsimony import LargeParsimony
 
 
+
+##
+# Parses user specified options and delegetes
+# appropriate actions to other modules. Also serves as
+# a data storage of computed results.
 class Computation:
 
+    ##
+    # Constructor initializes the object variables
+    # and calls other modules to do so.
+    #
+    # @param options computation options in the form of a dictionary-like object
     def __init__(self, options):
         self.algorithm = None
-        self.gapPenalty = None
         self.gapPenalty = None
         self.includeGaps = None
         self.removePoor = None
@@ -27,19 +40,23 @@ class Computation:
         self.distanceMatrix = None
         self.tree = self.computeTree()
 
+    ##
+    # Parses the options passed to the constructor
+    #
+    # @param options computation options in the form of a dictionary-like object
     def parseOptions(self, options):
         self.algorithm = options["method"]
         if self.algorithm not in (TreeBuildAlgorithms.NJ, TreeBuildAlgorithms.PARSIMONY):
             raise RuntimeError("Unknown method: " + self.algorithm)
-        self.gapPenalty = options["gap_penalty"] # cost of gaps when they are included to the distance computation
+        self.gapPenalty = options["gap_penalty"]
         if self.gapPenalty < 0 or self.gapPenalty > 1:
             raise RuntimeError("Bad gap penalty value. Must be between 0 and 1. Got: " + self.gapPenalty)
-        self.includeGaps = not options["no_gaps"] # includes gaps into the tree computation
-        self.removePoor = not options["no_cleaning"] # removes poorly conserved regions
-        self.gapCutoff = options["gap_cutoff"] # at least x% in column are not gaps
+        self.includeGaps = not options["no_gaps"]
+        self.removePoor = not options["no_cleaning"]
+        self.gapCutoff = options["gap_cutoff"]
         if self.gapCutoff < 0 or self.gapCutoff > 1:
             raise RuntimeError("Bad gap cutoff value. Must be between 0 and 1. Got: " + self.gapCutoff)
-        self.pairCutoff = options["pair_cutoff"] # at least x% of pairs in column are identical
+        self.pairCutoff = options["pair_cutoff"]
         self.seqType = options["sequence_type"]
         if self.seqType == SeqTypes.AA:
             self.alignment = AlignIO.read(options["alignment_file"], "fasta", alphabet=generic_protein)
@@ -57,7 +74,10 @@ class Computation:
             self.distFunction = dfuncs.jukes_cantor
         else:
             raise RuntimeError("Unknown distance measure: " + options["dist_measure"])
-
+    ##
+    # Method that delegates tree computation
+    # to the appropriate module.
+    #
     def computeTree(self):
         if self.algorithm == TreeBuildAlgorithms.NJ:
             self.distanceMatrix = self.computeDistanceMatrix(self.alignment, self.distFunction)
@@ -67,11 +87,21 @@ class Computation:
         else:
             raise RuntimeError(self.algorithm + " not implemented.")
 
+    ##
+    # Method that can be used to update the results,
+    # if the Computation class changes.
+    #
     def update(self):
         self.alignment = self.cleanAlignment(self.alignment)
         self.distanceMatrix = self.computeDistanceMatrix(self.alignment, self.distFunction)
         self.tree = self.computeTree()
 
+    ##
+    # Computes the distance matrix from the alignment.
+    #
+    # @param alignment the mutliple sequence alignment instance
+    # @param distFunction the distance measure used, can be one
+    # of the functions in ptreegen::distance_functions.
     def computeDistanceMatrix(self, alignment, distFunction):
         dist_matrix = []
         for i,record_i in enumerate(alignment):
@@ -88,6 +118,13 @@ class Computation:
             dist_matrix.append(tuple(distances))
         return tuple(dist_matrix)
 
+    ##
+    # Method responsible for the correct alignment cleaning.
+    #
+    # It removes badly conserved regions and/or regions with too many gaps,
+    # if requested by the user.
+    #
+    # @param alignment the mutliple sequence alignment instance
     def cleanAlignment(self, alignment):
         to_remove = set()
         for col_idx in range(alignment.get_alignment_length()):
@@ -129,3 +166,29 @@ class Computation:
             cleaned_alignment.append(SeqRecord(seq.toseq(), id=record.id))
 
         return cleaned_alignment
+
+    ##
+    # @var algorithm
+    # The methodology used to build the tree as one of those in ptreegen::enums.
+    # @var gapPenalty
+    # Cost of gaps when they are included in the distance computation.
+    # @var includeGaps
+    # Specifies if columns with gaps should be left in the alignment or deleted.
+    # @var removePoor
+    # Specifies if poorly conserved regions should be removed from the alignment.
+    # @var gapCutoff
+    # If at least x% in column are not gaps, then the column is left in the alignment.
+    # @var pairCutoff
+    # If at least x% of pairs in column are identical, then the column is left in the alignment.
+    # @var seqType
+    # The type of the input sequence as one of ptreegen::enums.
+    # @var distFunction
+    # Pointer to function used to compute distances between a two sequences.
+    # @var options
+    # Reference to the dictionary like object.
+    # @var alignment
+    # Reference to an object representing the multiple sequence alignment.
+    # @var distanceMatrix
+    # The distance matrix for the alignment.
+    # @var tree
+    # The generated tree.
