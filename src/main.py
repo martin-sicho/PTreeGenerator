@@ -1,5 +1,6 @@
-##
-# The main module. Handles the comand line options
+## @package main
+# The main module with the main method.
+# Handles the comand line options
 # and delegates actions to other modules.
 
 from argparse import ArgumentParser

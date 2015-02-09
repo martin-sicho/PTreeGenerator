@@ -1,8 +1,24 @@
+## @package distance_functions
+# Contains implementations of possible distance measures.
+#
+
 import math
 
 from enums import SeqTypes
 
-
+##
+# Computation of the uncorrected p-distance.
+#
+# The formula is similar to the one used in EMBOSS
+# (see http://emboss.sourceforge.net/apps/release/6.6/emboss/apps/distmat.html).
+#
+# @param seq1 first sequence
+# @param seq2 second sequence
+# @param *args positional arguments
+# @param **kwargs keyword arguments
+# (the "gap_penalty" argument is used to determine the gap penalty)
+#
+# @return distance as a single value
 def p_distance(seq1, seq2, *args, **kwargs):
     assert len(seq1) == len(seq2)
     gap_penalty = 0
@@ -20,10 +36,33 @@ def p_distance(seq1, seq2, *args, **kwargs):
             gaps+=1
     return 1 - float(matches) / ((positions_all - gaps) + gaps * gap_penalty)
 
+##
+# Poisson corrected p-distance.
+#
+# For more info see: http://goo.gl/upr3wR
+#
+# @param seq1 first sequence
+# @param seq2 second sequence
+# @param *args positional arguments
+# @param **kwargs keyword arguments
+#
+# @return distance as a single value
 def poisson_corrected(seq1, seq2, *args, **kwargs):
     p_dist = p_distance(seq1, seq2, *args, **kwargs)
     return -1 * math.log(1 - p_dist)
 
+##
+# Distance according to the Jukes-Cantor model.
+#
+# For more info see: http://goo.gl/upr3wR
+#
+# @param seq1 first sequence
+# @param seq2 second sequence
+# @param *args positional arguments
+# @param **kwargs keyword arguments
+# ("sequence_type" option is used to determine the parameters for the formula)
+#
+# @return distance as a single value
 def jukes_cantor(seq1, seq2, *args, **kwargs):
     p_dist = p_distance(seq1, seq2, *args, **kwargs)
     if kwargs["sequence_type"] == SeqTypes.AA:

@@ -2,13 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="41a68163-645c-4b76-928b-1802c0fc59df" name="Default" comment="refactoring + documentation&#10;- refactored some stuff and wrote docs for the computation and main module">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/ptreegen/Computation.py" afterPath="$PROJECT_DIR$/src/ptreegen/computation.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/ptreegen/DistanceMatrix.py" afterPath="$PROJECT_DIR$/src/ptreegen/distance_matrix.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/docs/Doxyfile" afterPath="$PROJECT_DIR$/docs/Doxyfile" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/ptreegen/neigbor_joining.py" afterPath="$PROJECT_DIR$/src/ptreegen/neighbor_joining.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ptreegen/__init__.py" afterPath="$PROJECT_DIR$/src/ptreegen/__init__.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ptreegen/computation.py" afterPath="$PROJECT_DIR$/src/ptreegen/computation.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/tests/distance_based_test.py" afterPath="$PROJECT_DIR$/src/tests/distance_based_test.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ptreegen/distance_functions.py" afterPath="$PROJECT_DIR$/src/ptreegen/distance_functions.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ptreegen/distance_matrix.py" afterPath="$PROJECT_DIR$/src/ptreegen/distance_matrix.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ptreegen/enums.py" afterPath="$PROJECT_DIR$/src/ptreegen/enums.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.py" afterPath="$PROJECT_DIR$/src/main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/ptreegen/neigbor_joining.py" afterPath="$PROJECT_DIR$/src/ptreegen/neigbor_joining.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/projekt_repo.iml" afterPath="$PROJECT_DIR$/.idea/projekt_repo.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="projekt_repo.iws" />
@@ -21,11 +22,11 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/projekt_repo$character_based_tests.coverage" NAME="character_based_tests Coverage Results" MODIFIED="1423507862916" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/projekt_repo$tests.coverage" NAME="tests Coverage Results" MODIFIED="1423234313347" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
-    <SUITE FILE_PATH="coverage/projekt_repo$character_based_tests.coverage" NAME="character_based_tests Coverage Results" MODIFIED="1423482110393" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/projekt_repo$distance_based_tests.coverage" NAME="distance_based_tests Coverage Results" MODIFIED="1423493427992" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/projekt_repo$main_help.coverage" NAME="main_help Coverage Results" MODIFIED="1423493187430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/projekt_repo$main.coverage" NAME="main Coverage Results" MODIFIED="1423501511119" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/projekt_repo$main.coverage" NAME="main Coverage Results" MODIFIED="1423507889372" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -39,13 +40,13 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="computation.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/ptreegen/computation.py">
+      <file leaf-file-name="neighbor_joining.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/ptreegen/neighbor_joining.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.1865922" vertical-offset="1152" max-vertical-offset="3582">
-              <caret line="123" column="30" selection-start-line="123" selection-start-column="30" selection-end-line="123" selection-end-column="30" />
+            <state vertical-scroll-proportion="0.84745765" vertical-offset="1074" max-vertical-offset="1782">
+              <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
               <folding>
-                <element signature="e#89#112#0" expanded="true" />
+                <element signature="e#102#123#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -90,9 +91,15 @@
         <option value="$PROJECT_DIR$/tests/character_based_test.py" />
         <option value="$PROJECT_DIR$/ptreegen/enums.py" />
         <option value="$PROJECT_DIR$/main.py" />
-        <option value="$PROJECT_DIR$/src/main.py" />
         <option value="$PROJECT_DIR$/src/ptreegen/Computation.py" />
         <option value="$PROJECT_DIR$/src/ptreegen/computation.py" />
+        <option value="$PROJECT_DIR$/src/ptreegen/distance_matrix.py" />
+        <option value="$PROJECT_DIR$/src/ptreegen/enums.py" />
+        <option value="$PROJECT_DIR$/src/ptreegen/distance_functions.py" />
+        <option value="$PROJECT_DIR$/src/ptreegen/__init__.py" />
+        <option value="$PROJECT_DIR$/src/main.py" />
+        <option value="$PROJECT_DIR$/src/ptreegen/neigbor_joining.py" />
+        <option value="$PROJECT_DIR$/src/ptreegen/neighbor_joining.py" />
       </list>
     </option>
   </component>
@@ -214,6 +221,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="utilities" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="projekt_repo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bioinfo_alg_repo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="docs" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -612,7 +633,11 @@
       <created>1423482587130</created>
       <updated>1423482587130</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="refactoring + documentation&#10;- refactored some stuff and wrote docs for the computation and main module">
+      <created>1423501560366</created>
+      <updated>1423501560366</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -650,8 +675,8 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32834226" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20568928" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.30415756" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -766,6 +791,82 @@
         </state>
       </provider>
     </entry>
+    <entry file="uml://Python/ptreegen.distance_matrix.DistanceMatrix">
+      <provider selected="true" editor-type-id="UmlEditorProvider">
+        <state>
+          <ID>Python</ID>
+          <OriginalElement>ptreegen.distance_matrix.DistanceMatrix</OriginalElement>
+          <nodes>
+            <node x="" y="">ptreegen.distance_matrix.DistanceMatrix</node>
+          </nodes>
+          <notes />
+          <edges />
+          <settings layout="Hierarchic Group" zoom="1.0" x="144.0" y="14.0" />
+          <SelectedNodes />
+          <Categories />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ptreegen/computation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.23728813" vertical-offset="2928" max-vertical-offset="3636">
+          <caret line="172" column="20" selection-start-line="172" selection-start-column="6" selection-end-line="172" selection-end-column="20" />
+          <folding>
+            <element signature="e#89#112#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/Doxyfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="6145" max-vertical-offset="32364">
+          <caret line="354" column="9" selection-start-line="354" selection-start-column="2" selection-end-line="354" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ptreegen/distance_functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.1440678" vertical-offset="162" max-vertical-offset="1404">
+          <caret line="54" column="23" selection-start-line="54" selection-start-column="23" selection-end-line="54" selection-end-column="23" />
+          <folding>
+            <element signature="e#92#103#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.050847456" vertical-offset="0" max-vertical-offset="1728">
+          <caret line="2" column="2" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ptreegen/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.04993065" vertical-offset="0" max-vertical-offset="721">
+          <caret line="2" column="2" selection-start-line="2" selection-start-column="2" selection-end-line="2" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ptreegen/enums.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="774">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="2" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ptreegen/distance_matrix.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7966102" vertical-offset="2226" max-vertical-offset="2934">
+          <caret line="155" column="54" selection-start-line="155" selection-start-column="54" selection-end-line="155" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/tests/distance_based_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="972">
@@ -776,36 +877,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.py">
+    <entry file="file://$PROJECT_DIR$/src/ptreegen/neighbor_joining.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.37711865" vertical-offset="447" max-vertical-offset="1746">
-          <caret line="10" column="26" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ptreegen/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="721">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ptreegen/distance_matrix.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.21564245" vertical-offset="671" max-vertical-offset="1566">
-          <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ptreegen/computation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.1865922" vertical-offset="1152" max-vertical-offset="3582">
-          <caret line="123" column="30" selection-start-line="123" selection-start-column="30" selection-end-line="123" selection-end-column="30" />
+        <state vertical-scroll-proportion="0.84745765" vertical-offset="1074" max-vertical-offset="1782">
+          <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
           <folding>
-            <element signature="e#89#112#0" expanded="true" />
+            <element signature="e#102#123#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -9,8 +9,9 @@ from Bio.SeqRecord import SeqRecord
 
 from ptreegen.enums import *
 import distance_functions as dfuncs
-from neigbor_joining import NeigborJoining
+from neighbor_joining import NeighborJoining
 from ptreegen.parsimony import LargeParsimony
+
 
 
 
@@ -78,10 +79,11 @@ class Computation:
     # Method that delegates tree computation
     # to the appropriate module.
     #
+    # @return reference to the computed tree object
     def computeTree(self):
         if self.algorithm == TreeBuildAlgorithms.NJ:
             self.distanceMatrix = self.computeDistanceMatrix(self.alignment, self.distFunction)
-            return NeigborJoining(self.distanceMatrix, self.alignment).tree
+            return NeighborJoining(self.distanceMatrix, self.alignment).tree
         elif self.algorithm == TreeBuildAlgorithms.PARSIMONY:
             return LargeParsimony(self.alignment).tree
         else:
@@ -102,6 +104,7 @@ class Computation:
     # @param alignment the mutliple sequence alignment instance
     # @param distFunction the distance measure used, can be one
     # of the functions in ptreegen::distance_functions.
+    # @return distance matrix as a tuple
     def computeDistanceMatrix(self, alignment, distFunction):
         dist_matrix = []
         for i,record_i in enumerate(alignment):

@@ -1,9 +1,24 @@
+## @package neighbor_joining
+# Contains just the ptreegen::neighbor_joining::NeighborJoining class
+#
+
 from ete2 import Tree
 
 from distance_matrix import DistanceMatrix
 
-class NeigborJoining:
+##
+# Contains an implementation of the Neighbor-Joining algorithm.
+#
+# The computed tree is stored as an internal member NeighborJoining::tree.
+#
+class NeighborJoining:
 
+    ##
+    # The constructor just saves the data for the execution.
+    #
+    # @param distMatrtix the distance matrix
+    # @param alignment should be specified when the names parameter is not present
+    # @param names the names of the taxa in the distance matrix
     def __init__(self, distMatrtix, alignment=None, names=None):
         self._alignment = alignment
         self._names = names
@@ -14,6 +29,10 @@ class NeigborJoining:
         else:
             raise RuntimeError("You must pass either an alignment or a list of names.")
 
+    ##
+    # Neighbor-Joining implementation.
+    #
+    # @return constructed tree with edges weighted by distances
     @property
     def tree(self):
         L = self._distMatrix.columnNames
@@ -65,3 +84,11 @@ class NeigborJoining:
         tree = last_nodes[0]
 
         return tree
+
+    ##
+    # @var _distMatrix
+    # the distance matrix in more or less arbitrary form
+    # @var _names
+    # taxa identification strings
+    # @var _alignment
+    # multiple sequence alignment

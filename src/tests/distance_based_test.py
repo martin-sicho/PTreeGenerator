@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 
 import ptreegen
-from ptreegen.neigbor_joining import NeigborJoining
+from ptreegen.neighbor_joining import NeighborJoining
 
 
 class TestNeigborJoining(TestCase):
@@ -18,7 +18,7 @@ class TestNeigborJoining(TestCase):
         ]
 
     def test___call__(self):
-        nj = NeigborJoining(self.test_matrix, names=["A", "B", "C", "D", "E", "F"])
+        nj = NeighborJoining(self.test_matrix, names=["A", "B", "C", "D", "E", "F"])
         # nj.tree.show()
 
 class TestComputation(TestCase):
