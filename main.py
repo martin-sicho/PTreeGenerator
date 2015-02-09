@@ -66,12 +66,12 @@ def main(args):
     arg_parser.add_argument('-d'
                             , '--dist-measure'
                             , action='store'
-                            , default=ptreegen.DistMeasures.P_DISTANCE
+                            , default=ptreegen.DistMeasures.JUKES_CANTOR
                             , help='Distance function to be used to compute distance '
-                                   + 'between sequences (p-distance by default): "'
+                                   + 'between sequences (Jukes-Cantor by default): "'
                                    + ptreegen.DistMeasures.P_DISTANCE + '" for p-distance, "'
-                                   + ptreegen.SeqTypes.DNA + '" for DNA and "'
-                                   + ptreegen.SeqTypes.RNA + '" for RNA.'
+                                   + ptreegen.DistMeasures.POISSON_CORRECTED + '" for Poisson correction and "'
+                                   + ptreegen.DistMeasures.JUKES_CANTOR + '" for Jukes-Cantor.'
     )
 
     arguments = arg_parser.parse_args()

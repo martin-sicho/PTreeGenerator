@@ -87,7 +87,7 @@ class TestComputation(unittest.TestCase):
         computation = ptreegen.Computation(self.options)
         sml_prs = SmallParsimony(computation.tree, computation.alignment)
         print sml_prs.cost
-        # computation.tree.show()
+        computation.tree.show()
 
         self.options["method"] = ptreegen.TreeBuildAlgorithms.NJ
         computation = ptreegen.Computation(self.options)

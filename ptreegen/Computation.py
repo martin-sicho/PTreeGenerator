@@ -21,7 +21,8 @@ class Computation:
         self.pairCutoff = None
         self.seqType = None
         self.distFunction = None
-        self.parseOptions(options)
+        self.options = options
+        self.parseOptions(self.options)
         self.alignment = self.cleanAlignment(self.alignment)
         self.distanceMatrix = None
         self.tree = self.computeTree()
@@ -50,6 +51,10 @@ class Computation:
             raise RuntimeError("Unknown sequence type: " + self.seqType)
         if options["dist_measure"] == DistMeasures.P_DISTANCE:
             self.distFunction = dfuncs.p_distance
+        elif options["dist_measure"] == DistMeasures.POISSON_CORRECTED:
+            self.distFunction = dfuncs.poisson_corrected
+        elif options["dist_measure"] == DistMeasures.JUKES_CANTOR:
+            self.distFunction = dfuncs.jukes_cantor
         else:
             raise RuntimeError("Unknown distance measure: " + options["dist_measure"])
 
@@ -75,10 +80,7 @@ class Computation:
             for j,record_j in enumerate(alignment):
                 if j > i:
                     seq_j = record_j.seq
-                    if self.gapPenalty:
-                        distances.append(distFunction(seq_i, seq_j, gapPenalty=self.gapPenalty))
-                    else:
-                        distances.append(distFunction(seq_i, seq_j))
+                    distances.append(distFunction(seq_i, seq_j, **self.options))
                 elif i == j:
                     distances.append(0)
                 else:

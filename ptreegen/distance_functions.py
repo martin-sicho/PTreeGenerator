@@ -1,6 +1,13 @@
+import math
 
-def p_distance(seq1, seq2, gapPenalty=0):
+from enums import SeqTypes
+
+
+def p_distance(seq1, seq2, *args, **kwargs):
     assert len(seq1) == len(seq2)
+    gap_penalty = 0
+    if kwargs.has_key("gap_penalty"):
+        gap_penalty = kwargs["gap_penalty"]
     positions_all = len(seq1)
     matches = 0
     gaps = 0
@@ -9,6 +16,19 @@ def p_distance(seq1, seq2, gapPenalty=0):
         res2 = seq2[idx]
         if res1 == res2 and not(res1 == "-" and res2 == "-"):
             matches+=1
-        elif res1 == "-" or res2 == "-":
+        elif res1 == "-" or res2 == "-" and not(res1 == "-" and res2 == "-"):
             gaps+=1
-    return 1 - float(matches) / ((positions_all - gaps) + gaps * gapPenalty)
+    return 1 - float(matches) / ((positions_all - gaps) + gaps * gap_penalty)
+
+def poisson_corrected(seq1, seq2, *args, **kwargs):
+    p_dist = p_distance(seq1, seq2, *args, **kwargs)
+    return -1 * math.log(1 - p_dist)
+
+def jukes_cantor(seq1, seq2, *args, **kwargs):
+    p_dist = p_distance(seq1, seq2, *args, **kwargs)
+    if kwargs["sequence_type"] == SeqTypes.AA:
+        return (-19.0/20.0) * math.log(1 - (20.0/19.0) * p_dist)
+    elif kwargs["sequence_type"] == SeqTypes.AA:
+        return (-3.0/4.0) * math.log(1 - (4.0/3.0) * p_dist)
+    else:
+        assert False

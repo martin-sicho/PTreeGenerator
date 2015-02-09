@@ -14,7 +14,9 @@ SeqTypes = enum(
 )
 
 DistMeasures = enum(
-    P_DISTANCE = "P_DISTANCE"
+    P_DISTANCE = "P_DISTANCE",
+    POISSON_CORRECTED = "POISSON_CORRECTED",
+    JUKES_CANTOR = "JUKES_CANTOR",
 )
 
 
