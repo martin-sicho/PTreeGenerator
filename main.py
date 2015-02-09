@@ -22,8 +22,14 @@ def main(args):
                             , help='Method used to build the tree. One of the following: "'
                             + ptreegen.TreeBuildAlgorithms.NJ + '" for neigbor joining and "'
                             + ptreegen.TreeBuildAlgorithms.PARSIMONY + '" for a parsimony method. '
-                            + 'Neigbor joining is the default method and currently the only one available.'
+                            + 'Neigbor joining is the default method.'
                             )
+    arg_parser.add_argument('-t'
+                            , '--pars-tree-count'
+                            , action='store'
+                            , default=1000
+                            , help="Number of trees used to build a consensus tree from when using "
+                                   + "the parsimony method. Default value is 1000.")
     arg_parser.add_argument('-g'
                             , '--no-gaps'
                             , action='store_true'
@@ -41,7 +47,8 @@ def main(args):
                             , '--gap-cutoff'
                             , action='store'
                             , default=0.8
-                            , help="When cleaning the alignment, keep only columns with non-gap frequency above this threshold. Default value is 0.8.")
+                            , help="When cleaning the alignment, keep only columns with "
+                                   + "non-gap frequency above this threshold. Default value is 0.8.")
     arg_parser.add_argument('-r'
                             , '--pair-cutoff'
                             , action='store'

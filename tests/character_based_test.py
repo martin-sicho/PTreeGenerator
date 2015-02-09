@@ -6,6 +6,7 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Align import MultipleSeqAlignment
 
+import ptreegen
 from ptreegen.parsimony import SmallParsimony, LargeParsimony
 
 
@@ -48,7 +49,7 @@ class TestSmallParsimony(unittest.TestCase):
         self.assertEqual(parsimony.cost, 4)
         # self.exampleTree.show(tree_style=self.circular_style)
 
-class testLargeParsimony(unittest.TestCase):
+class TestLargeParsimony(unittest.TestCase):
 
     def setUp(self):
         self.alignment = MultipleSeqAlignment(
@@ -65,25 +66,33 @@ class testLargeParsimony(unittest.TestCase):
         parsimony = LargeParsimony(self.alignment)
         sml_pr = SmallParsimony(parsimony.tree, self.alignment)
         print sml_pr.cost
-        parsimony.tree.show()
+        # parsimony.tree.show()
 
-# class TestComputation(unittest.TestCase):
-#
-#     def setUp(self):
-#         self.options = {
-#             "algorithm" : ptreegen.TreeBuildAlgorithms.PARSIMONY
-#             , "seq_type" : ptreegen.SeqTypes.AA
-#             , "ali_path" : "test_files/keratins_ali.fasta"
-#             , "include_gaps" : True
-#             , "remove_poor" : True
-#             , "gap_cutoff" : 0.8
-#             , "pair_cutoff" : 0.3
-#             , "gap_penalty" : 0.5
-#         }
-#
-#     def test___init__(self):
-#         computation = ptreegen.Computation(self.options)
-#         computation.tree.show()
+class TestComputation(unittest.TestCase):
+
+    def setUp(self):
+        self.options = {
+            "method" : ptreegen.TreeBuildAlgorithms.PARSIMONY
+            , "sequence_type" : ptreegen.SeqTypes.AA
+            , "alignment_file" : "test_files/keratins_ali.fasta"
+            , "no_gaps" : False
+            , "no_cleaning" : False
+            , "gap_cutoff" : 0.8
+            , "pair_cutoff" : 0.3
+            , "gap_penalty" : 0.5
+        }
+
+    def test___init__(self):
+        computation = ptreegen.Computation(self.options)
+        sml_prs = SmallParsimony(computation.tree, computation.alignment)
+        print sml_prs.cost
+        # computation.tree.show()
+
+        self.options["method"] = ptreegen.TreeBuildAlgorithms.NJ
+        computation = ptreegen.Computation(self.options)
+        sml_prs = SmallParsimony(computation.tree, computation.alignment)
+        print sml_prs.cost
+        # computation.tree.show()
 
 if __name__ == '__main__':
     unittest.main()

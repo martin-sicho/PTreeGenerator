@@ -3,6 +3,9 @@ from random import shuffle
 from ete2 import Tree
 from Bio.Align import MultipleSeqAlignment
 
+import utilities
+
+
 class SmallParsimony:
 
     def __init__(self, tree, alignment):
@@ -53,57 +56,59 @@ class SmallParsimony:
 
 class LargeParsimony:
 
-    def __init__(self, alignment):
+    def __init__(self, alignment, steps=1000):
+        self._qpSteps = steps
         self._alignment = alignment
         self._sequencesDict = {x.id : x.seq for x in list(self._alignment)}
         quartet_combinations = []
         for combination in LargeParsimony.uniqueCombinationsGenerator(self._sequencesDict.keys(), 4):
             quartet_combinations.append(combination)
-
         self._optimalQuartets = self.getOptimalQuartets(quartet_combinations)
+        self.tree = self.quartetPuzzling(self._qpSteps)
 
-        # TODO: repeat this a few times and choose consensus tree
-        # MARGUSH, T., and E R. MCMORRIS. 1981. Consensus n-trees
-        # (http://dx.doi.org/10.1007/BF02459446)
-        # or http://dx.doi.org/10.1007/BF01908061
-        self.tree = self.quartetPuzzling()
 
-    def quartetPuzzling(self):
+
+    def quartetPuzzling(self, steps):
         seq_ids = self._sequencesDict.keys()
-        shuffle(seq_ids)
-        first_quartet = self._optimalQuartets[self.getQuartetID(seq_ids[0:4])]["topology"]
-        rooted_tree = self.treeFromQuartet(first_quartet)
-        tree = rooted_tree.children[0]
-        tree.add_child(rooted_tree.children[1])
-        # tree.show()
-
-        for i in range(4,len(seq_ids)):
-            self.initEdgeLengths(tree, 0)
-
-            quartets = []
-            for triplet in self.combinationsGenerator(seq_ids[0:i], 3):
-                triplet.append(seq_ids[i])
-                quartets.append(tuple(triplet))
-
-            qt_topos_found = set()
-            for quartet in quartets:
-                optimal_qt_topo_id = self._optimalQuartets[self.getQuartetID(quartet)]["topology_id"]
-                qt_topo_id = self.getTopologyID(quartet)
-                if qt_topo_id == optimal_qt_topo_id and qt_topo_id not in qt_topos_found:
-                    qt_topos_found.add(qt_topo_id)
-                    self.increaseCostOnPath(tree, quartet[0], quartet[1])
-
-            # choose edge with minimum cost, delete it and add new leaf seq_ids[i]
-            shortest_edge = self.findShortestEdge(tree)
-            new_node = Tree(name=shortest_edge[0].name + "_" + shortest_edge[1].name)
-            new_node.add_child(name=seq_ids[i])
-            detached = shortest_edge[1].detach()
-            shortest_edge[0].add_child(new_node)
-            new_node.add_child(detached)
+        trees = []
+        for i in range(steps):
+            shuffle(seq_ids)
+            first_quartet = self._optimalQuartets[self.getQuartetID(seq_ids[0:4])]["topology"]
+            rooted_tree = self.treeFromQuartet(first_quartet)
+            tree = rooted_tree.children[0]
+            tree.add_child(rooted_tree.children[1])
             # tree.show()
 
-        self.initEdgeLengths(tree, 1)
-        return tree
+            for i in range(4,len(seq_ids)):
+                self.initEdgeLengths(tree, 0)
+
+                quartets = []
+                for triplet in self.combinationsGenerator(seq_ids[0:i], 3):
+                    triplet.append(seq_ids[i])
+                    quartets.append(tuple(triplet))
+
+                qt_topos_found = set()
+                for quartet in quartets:
+                    optimal_qt_topo_id = self._optimalQuartets[self.getQuartetID(quartet)]["topology_id"]
+                    qt_topo_id = self.getTopologyID(quartet)
+                    if qt_topo_id == optimal_qt_topo_id and qt_topo_id not in qt_topos_found:
+                        qt_topos_found.add(qt_topo_id)
+                        self.increaseCostOnPath(tree, quartet[0], quartet[1])
+
+                # choose edge with minimum cost, delete it and add new leaf seq_ids[i]
+                shortest_edge = self.findShortestEdge(tree)
+                new_node = Tree(name=shortest_edge[0].name + "_" + shortest_edge[1].name)
+                new_node.add_child(name=seq_ids[i])
+                detached = shortest_edge[1].detach()
+                shortest_edge[0].add_child(new_node)
+                new_node.add_child(detached)
+                # tree.show()
+
+            self.initEdgeLengths(tree, 1)
+            trees.append(tree)
+
+        # find consensus tree
+        return utilities.findConsensusTree(trees)
 
     @staticmethod
     def findShortestEdge(tree):

@@ -6,6 +6,7 @@ from Bio.SeqRecord import SeqRecord
 from ptreegen.enums import *
 from neigbor_joining import NeigborJoining
 import distance_functions as dfuncs
+from ptreegen.parsimony import LargeParsimony
 
 
 class Computation:
@@ -21,7 +22,9 @@ class Computation:
         self.seqType = None
         self.parseOptions(options)
         self.alignment = self.cleanAlignment(self.alignment)
-        self.distanceMatrix = self.computeDistanceMatrix(self.alignment, dfuncs.p_distance)
+        self.distanceMatrix = None
+        if self.algorithm == TreeBuildAlgorithms.NJ:
+            self.distanceMatrix = self.computeDistanceMatrix(self.alignment, dfuncs.p_distance)
         self.tree = self.computeTree()
 
     def parseOptions(self, options):
@@ -50,6 +53,8 @@ class Computation:
     def computeTree(self):
         if self.algorithm == TreeBuildAlgorithms.NJ:
             return NeigborJoining(self.distanceMatrix, [x.id for x in self.alignment])()
+        elif self.algorithm == TreeBuildAlgorithms.PARSIMONY:
+            return LargeParsimony(self.alignment).tree
         else:
             raise RuntimeError(self.algorithm + " not implemented.")
 
