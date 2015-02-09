@@ -4,8 +4,8 @@ from Bio.Align import MultipleSeqAlignment
 from Bio.SeqRecord import SeqRecord
 
 from ptreegen.enums import *
-from neigbor_joining import NeigborJoining
 import distance_functions as dfuncs
+from neigbor_joining import NeigborJoining
 from ptreegen.parsimony import LargeParsimony
 
 
@@ -20,11 +20,10 @@ class Computation:
         self.gapCutoff = None
         self.pairCutoff = None
         self.seqType = None
+        self.distFunction = None
         self.parseOptions(options)
         self.alignment = self.cleanAlignment(self.alignment)
         self.distanceMatrix = None
-        if self.algorithm == TreeBuildAlgorithms.NJ:
-            self.distanceMatrix = self.computeDistanceMatrix(self.alignment, dfuncs.p_distance)
         self.tree = self.computeTree()
 
     def parseOptions(self, options):
@@ -49,10 +48,15 @@ class Computation:
             self.alignment = AlignIO.read(options["alignment_file"], "fasta", alphabet=generic_rna)
         else:
             raise RuntimeError("Unknown sequence type: " + self.seqType)
+        if options["dist_measure"] == DistMeasures.P_DISTANCE:
+            self.distFunction = dfuncs.p_distance
+        else:
+            raise RuntimeError("Unknown distance measure: " + options["dist_measure"])
 
     def computeTree(self):
         if self.algorithm == TreeBuildAlgorithms.NJ:
-            return NeigborJoining(self.distanceMatrix, [x.id for x in self.alignment])()
+            self.distanceMatrix = self.computeDistanceMatrix(self.alignment, self.distFunction)
+            return NeigborJoining(self.distanceMatrix, self.alignment).tree
         elif self.algorithm == TreeBuildAlgorithms.PARSIMONY:
             return LargeParsimony(self.alignment).tree
         else:
@@ -60,7 +64,7 @@ class Computation:
 
     def update(self):
         self.alignment = self.cleanAlignment(self.alignment)
-        self.distanceMatrix = self.computeDistanceMatrix(self.alignment, dfuncs.p_distance)
+        self.distanceMatrix = self.computeDistanceMatrix(self.alignment, self.distFunction)
         self.tree = self.computeTree()
 
     def computeDistanceMatrix(self, alignment, distFunction):

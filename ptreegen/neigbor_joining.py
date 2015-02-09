@@ -4,11 +4,19 @@ from DistanceMatrix import DistanceMatrix
 
 class NeigborJoining:
 
-    def __init__(self, distMatrtix, names):
-        self.distMatrix = DistanceMatrix(distMatrtix, names)
+    def __init__(self, distMatrtix, alignment=None, names=None):
+        self._alignment = alignment
+        self._names = names
+        if self._alignment:
+            self._distMatrix = DistanceMatrix(distMatrtix, [x.id for x in self._alignment])
+        elif self._names:
+            self._distMatrix = DistanceMatrix(distMatrtix, self._names)
+        else:
+            raise RuntimeError("You must pass either an alignment or a list of names.")
 
-    def __call__(self, *args, **kwargs):
-        L = self.distMatrix.columnNames
+    @property
+    def tree(self):
+        L = self._distMatrix.columnNames
         tree = Tree()
         tree.name = "root"
         tree.dist = 0
@@ -18,7 +26,7 @@ class NeigborJoining:
 
         iter_count = 1
         while len(L) > 2:
-            nearest_nbs = self.distMatrix.getNearestNeigbors()
+            nearest_nbs = self._distMatrix.getNearestNeigbors()
             node_i = tree.search_nodes(name=nearest_nbs[0])[0]
             node_j = tree.search_nodes(name=nearest_nbs[1])[0]
             L.remove(nearest_nbs[0])
@@ -27,10 +35,10 @@ class NeigborJoining:
             node_k = Tree()
             node_k.dist = 0
             node_k.name = "X" + str(iter_count)
-            d_ij = self.distMatrix.getDistance(node_i.name, node_j.name)
+            d_ij = self._distMatrix.getDistance(node_i.name, node_j.name)
             assert d_ij > 0
-            d_ik = 0.5 * d_ij + 0.5 * (self.distMatrix.getSeparation(node_i.name) - self.distMatrix.getSeparation(node_j.name))
-            d_jk = 0.5 * d_ij + 0.5 * (self.distMatrix.getSeparation(node_j.name) - self.distMatrix.getSeparation(node_i.name))
+            d_ik = 0.5 * d_ij + 0.5 * (self._distMatrix.getSeparation(node_i.name) - self._distMatrix.getSeparation(node_j.name))
+            d_jk = 0.5 * d_ij + 0.5 * (self._distMatrix.getSeparation(node_j.name) - self._distMatrix.getSeparation(node_i.name))
             assert d_jk > 0
             assert d_ik > 0
 
@@ -42,17 +50,17 @@ class NeigborJoining:
 
             d_km = []
             for node_m in L:
-                d_km.append(0.5 * (self.distMatrix.getDistance(node_i.name, node_m) + self.distMatrix.getDistance(node_j.name, node_m) - d_ij) )
+                d_km.append(0.5 * (self._distMatrix.getDistance(node_i.name, node_m) + self._distMatrix.getDistance(node_j.name, node_m) - d_ij) )
                 assert d_km > 0
 
-            self.distMatrix.removeData((node_i.name, node_j.name))
-            self.distMatrix.appendData(d_km, node_k.name)
+            self._distMatrix.removeData((node_i.name, node_j.name))
+            self._distMatrix.appendData(d_km, node_k.name)
 
             iter_count+=1
-            L = self.distMatrix.columnNames
+            L = self._distMatrix.columnNames
 
         last_nodes = tree.get_children()
-        d_ij = self.distMatrix.getDistance(last_nodes[0].name, last_nodes[1].name)
+        d_ij = self._distMatrix.getDistance(last_nodes[0].name, last_nodes[1].name)
         last_nodes[0].add_child(last_nodes[1], dist=d_ij)
         tree = last_nodes[0]
 

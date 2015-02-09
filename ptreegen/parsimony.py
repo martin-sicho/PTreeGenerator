@@ -3,7 +3,7 @@ from random import shuffle
 from ete2 import Tree
 from Bio.Align import MultipleSeqAlignment
 
-import utilities
+from utilities import *
 
 
 class SmallParsimony:
@@ -57,11 +57,11 @@ class SmallParsimony:
 class LargeParsimony:
 
     def __init__(self, alignment, steps=1000):
-        self._qpSteps = steps
+        self._qpSteps = int(steps)
         self._alignment = alignment
         self._sequencesDict = {x.id : x.seq for x in list(self._alignment)}
         quartet_combinations = []
-        for combination in LargeParsimony.uniqueCombinationsGenerator(self._sequencesDict.keys(), 4):
+        for combination in combination_utils.uniqueCombinationsGenerator(self._sequencesDict.keys(), 4):
             quartet_combinations.append(combination)
         self._optimalQuartets = self.getOptimalQuartets(quartet_combinations)
         self.tree = self.quartetPuzzling(self._qpSteps)
@@ -71,7 +71,7 @@ class LargeParsimony:
     def quartetPuzzling(self, steps):
         seq_ids = self._sequencesDict.keys()
         trees = []
-        for i in range(steps):
+        for step in range(steps):
             shuffle(seq_ids)
             first_quartet = self._optimalQuartets[self.getQuartetID(seq_ids[0:4])]["topology"]
             rooted_tree = self.treeFromQuartet(first_quartet)
@@ -80,10 +80,10 @@ class LargeParsimony:
             # tree.show()
 
             for i in range(4,len(seq_ids)):
-                self.initEdgeLengths(tree, 0)
+                tree_utils.initEdgeLengths(tree, 0)
 
                 quartets = []
-                for triplet in self.combinationsGenerator(seq_ids[0:i], 3):
+                for triplet in combination_utils.combinationsGenerator(seq_ids[0:i], 3):
                     triplet.append(seq_ids[i])
                     quartets.append(tuple(triplet))
 
@@ -93,10 +93,10 @@ class LargeParsimony:
                     qt_topo_id = self.getTopologyID(quartet)
                     if qt_topo_id == optimal_qt_topo_id and qt_topo_id not in qt_topos_found:
                         qt_topos_found.add(qt_topo_id)
-                        self.increaseCostOnPath(tree, quartet[0], quartet[1])
+                        tree_utils.increaseCostOnPath(tree, quartet[0], quartet[1])
 
                 # choose edge with minimum cost, delete it and add new leaf seq_ids[i]
-                shortest_edge = self.findShortestEdge(tree)
+                shortest_edge = tree_utils.findShortestEdge(tree)
                 new_node = Tree(name=shortest_edge[0].name + "_" + shortest_edge[1].name)
                 new_node.add_child(name=seq_ids[i])
                 detached = shortest_edge[1].detach()
@@ -104,55 +104,11 @@ class LargeParsimony:
                 new_node.add_child(detached)
                 # tree.show()
 
-            self.initEdgeLengths(tree, 1)
+            tree_utils.initEdgeLengths(tree, 1)
             trees.append(tree)
 
         # find consensus tree
-        return utilities.findConsensusTree(trees)
-
-    @staticmethod
-    def findShortestEdge(tree):
-        shortest_edge = [None, None]
-        min_dist = float("inf")
-        for node in tree.iter_descendants():
-            if node.dist < min_dist:
-                shortest_edge[0] = node.up
-                shortest_edge[1] = node
-        return tuple(shortest_edge)
-
-    @staticmethod
-    def increaseCostOnPath(tree, start, dest):
-        start_node = tree.search_nodes(name=start)[0]
-        end_node = tree.search_nodes(name=dest)[0]
-        node_from = dict()
-        to_visit = set()
-        visited = set()
-
-        to_visit.add(start_node)
-        node_from[start_node] = None
-        path_found = False
-        while to_visit and not path_found:
-            current = to_visit.pop()
-            neighbors = set(current.children)
-            if current.up:
-                neighbors.add(current.up)
-            for neighbor in neighbors:
-                if neighbor not in visited:
-                    node_from[neighbor] = current
-                    if neighbor == end_node:
-                        path_found = True
-                        break
-                    else:
-                        to_visit.add(neighbor)
-            visited.add(current)
-
-        node = end_node
-        while node:
-            if node.name != "Left":
-                node.dist += 1
-            node = node_from[node]
-
-        # tree.show()
+        return tree_utils.findConsensusTree(trees)
 
     def getOptimalQuartets(self, quartets):
         optimal_quartets = dict()
@@ -191,12 +147,6 @@ class LargeParsimony:
         return LargeParsimony.getQuartetID(quartet[0:2]) + LargeParsimony.getQuartetID(quartet[2:4])
 
     @staticmethod
-    def initEdgeLengths(tree, value):
-        tree.dist = value
-        for desc in tree.iter_descendants():
-            desc.dist = value
-
-    @staticmethod
     def treeFromQuartet(quartet):
         root = Tree()
         root.name = "root"
@@ -209,20 +159,3 @@ class LargeParsimony:
         for desc in root.iter_descendants():
             desc.dist = 0
         return root
-
-    @staticmethod
-    def uniqueCombinationsGenerator(items, n):
-            if not n:
-                yield []
-            else:
-                for i in xrange(len(items)):
-                    for comb in LargeParsimony.uniqueCombinationsGenerator(items[i+1:], n-1):
-                        yield [items[i]] + comb
-    @staticmethod
-    def combinationsGenerator(items, n):
-        if not n:
-            yield []
-        else:
-            for i in xrange(len(items)):
-                for comb in LargeParsimony.combinationsGenerator(items[:i]+items[i+1:],n-1):
-                    yield [items[i]] + comb

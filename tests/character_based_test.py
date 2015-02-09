@@ -80,6 +80,7 @@ class TestComputation(unittest.TestCase):
             , "gap_cutoff" : 0.8
             , "pair_cutoff" : 0.3
             , "gap_penalty" : 0.5
+            , "dist_measure" : ptreegen.DistMeasures.P_DISTANCE
         }
 
     def test___init__(self):

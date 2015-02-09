@@ -18,8 +18,8 @@ class TestNeigborJoining(TestCase):
         ]
 
     def test___call__(self):
-        functor = NeigborJoining(self.test_matrix, ["A", "B", "C", "D", "E", "F"])
-        functor().show()
+        nj = NeigborJoining(self.test_matrix, names=["A", "B", "C", "D", "E", "F"])
+        nj.tree.show()
 
 class TestComputation(TestCase):
 
@@ -33,6 +33,7 @@ class TestComputation(TestCase):
             , "gap_cutoff" : 0.8
             , "pair_cutoff" : 0.3
             , "gap_penalty" : 0.5
+            , "dist_measure" : ptreegen.DistMeasures.P_DISTANCE
         }
 
     def test___init__(self):

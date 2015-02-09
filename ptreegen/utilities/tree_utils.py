@@ -3,6 +3,51 @@ from sys import stderr
 from ete2 import Tree
 
 
+def findShortestEdge(tree):
+    shortest_edge = [None, None]
+    min_dist = float("inf")
+    for node in tree.iter_descendants():
+        if node.dist < min_dist:
+            shortest_edge[0] = node.up
+            shortest_edge[1] = node
+    return tuple(shortest_edge)
+
+def increaseCostOnPath(tree, start, dest):
+    start_node = tree.search_nodes(name=start)[0]
+    end_node = tree.search_nodes(name=dest)[0]
+    node_from = dict()
+    to_visit = set()
+    visited = set()
+
+    to_visit.add(start_node)
+    node_from[start_node] = None
+    path_found = False
+    while to_visit and not path_found:
+        current = to_visit.pop()
+        neighbors = set(current.children)
+        if current.up:
+            neighbors.add(current.up)
+        for neighbor in neighbors:
+            if neighbor not in visited:
+                node_from[neighbor] = current
+                if neighbor == end_node:
+                    path_found = True
+                    break
+                else:
+                    to_visit.add(neighbor)
+        visited.add(current)
+
+    node = end_node
+    while node:
+        if node.name != "Left":
+            node.dist += 1
+        node = node_from[node]
+
+def initEdgeLengths(tree, value):
+    tree.dist = value
+    for desc in tree.iter_descendants():
+        desc.dist = value
+
 def findConsensusTree(trees,weights=[],lim=0):
     """
     Returns weighted consensus tree. Uses 50% majority rule.
@@ -87,5 +132,5 @@ def findConsensusTree(trees,weights=[],lim=0):
                 n.support = weight
             sorted_nodes.pop(sorted_nodes.index(name))
             break
-    # return cons_tree.write(format=9)
+
     return cons_tree

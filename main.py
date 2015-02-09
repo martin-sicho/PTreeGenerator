@@ -58,8 +58,18 @@ def main(args):
                             , '--sequence-type'
                             , action='store'
                             , default=ptreegen.SeqTypes.AA
-                            , help='Type of the sequences in the alignment: "'
+                            , help='Type of the sequences in the alignment (proteins by default): "'
                                    + ptreegen.SeqTypes.AA + '" for proteins, "'
+                                   + ptreegen.SeqTypes.DNA + '" for DNA and "'
+                                   + ptreegen.SeqTypes.RNA + '" for RNA.'
+    )
+    arg_parser.add_argument('-d'
+                            , '--dist-measure'
+                            , action='store'
+                            , default=ptreegen.DistMeasures.P_DISTANCE
+                            , help='Distance function to be used to compute distance '
+                                   + 'between sequences (p-distance by default): "'
+                                   + ptreegen.DistMeasures.P_DISTANCE + '" for p-distance, "'
                                    + ptreegen.SeqTypes.DNA + '" for DNA and "'
                                    + ptreegen.SeqTypes.RNA + '" for RNA.'
     )
