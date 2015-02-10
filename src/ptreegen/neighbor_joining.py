@@ -39,7 +39,6 @@ class NeighborJoining:
         tree = Tree()
         tree.name = "root"
         tree.dist = 0
-        tree.unroot()
         for seq in L:
             tree.add_child(name=seq, dist=0)
 
@@ -80,10 +79,20 @@ class NeighborJoining:
 
         last_nodes = tree.get_children()
         d_ij = self._distMatrix.getDistance(last_nodes[0].name, last_nodes[1].name)
-        last_nodes[0].add_child(last_nodes[1], dist=d_ij)
-        tree = last_nodes[0]
+        leaf = None
+        new_root = None
+        for node in last_nodes:
+            if node.is_leaf():
+                node.dist = d_ij
+                leaf = node.detach()
+            else:
+                new_root = node.detach()
+        if not leaf:
+            leaf = last_nodes[0]
+            leaf.dist = d_ij
+        new_root.add_child(leaf)
 
-        return tree
+        return new_root
 
     ##
     # @var _distMatrix
