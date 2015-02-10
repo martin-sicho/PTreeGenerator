@@ -14,7 +14,6 @@ from ptreegen.parsimony import LargeParsimony
 
 
 
-
 ##
 # Parses user specified options and delegetes
 # appropriate actions to other modules. Also serves as

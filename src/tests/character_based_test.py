@@ -64,8 +64,7 @@ class TestLargeParsimony(unittest.TestCase):
 
     def test_solve(self):
         parsimony = LargeParsimony(self.alignment)
-        sml_pr = SmallParsimony(parsimony.tree, self.alignment)
-        print sml_pr.cost
+        print parsimony.cost
         # parsimony.tree.show()
 
 class TestComputation(unittest.TestCase):
