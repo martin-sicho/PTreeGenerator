@@ -22,7 +22,76 @@ There are two methodologies that can be used to build a phylogenetic tree:
  
 There are also a few options for handling gaps and alignment cleanup such as removing badly conserved regions or all gapped regions entirely.
 
-For a complete set of instructions run the program with the ```-h``` option.
+For a complete set of instructions and options, run the program with the ```-h``` option or read it here:
+
+```
+usage: ptreegen [-h] [--version] [-m METHOD] [-i PARS_TREE_COUNT] [-g]
+                [-p GAP_PENALTY] [-c] [-u GAP_CUTOFF] [-r PAIR_CUTOFF]
+                [-s SEQUENCE_TYPE] [-d DIST_MEASURE] [-f OUT_FORM]
+                [-t TREE_TYPE]
+                alignment_file
+
+This is a simple tool for generating phylogenetic trees from multiple sequence
+alignments. It implements two tree building approaches (Neigbor-Joining and
+Maximum Parsimony).It can also do some simple visualizations and export the
+tree in the Newick format.
+
+positional arguments:
+  alignment_file        Multiple sequence alignment in FASTA format.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --version             show program's version number and exit
+  -m METHOD, --method METHOD
+                        Method used to build the tree. One of the following:
+                        "NJ" for neigbor joining and "PARSIMONY" for a
+                        parsimony method. Neigbor joining is the default
+                        method.
+  -i PARS_TREE_COUNT, --pars-tree-count PARS_TREE_COUNT
+                        Number of trees used to build a consensus tree from
+                        when using the parsimony method. Default value is
+                        1000.
+  -g, --no-gaps         Remove all gapped postions from the alignment before
+                        tree building.
+  -p GAP_PENALTY, --gap-penalty GAP_PENALTY
+                        Gap penalty. Default value is 0.5.
+  -c, --no-cleaning     Do not clean badly conserved regions from the
+                        alignment before tree building.
+  -u GAP_CUTOFF, --gap-cutoff GAP_CUTOFF
+                        When cleaning the alignment, keep only columns with
+                        non-gap frequency above this threshold. Default value
+                        is 0.8.
+  -r PAIR_CUTOFF, --pair-cutoff PAIR_CUTOFF
+                        When cleaning the alignment, keep only columns where
+                        the frequency of identical pairs is above this
+                        threshold. Default value is 0.3.
+  -s SEQUENCE_TYPE, --sequence-type SEQUENCE_TYPE
+                        Type of the sequences in the alignment (proteins by
+                        default): "AA" for proteins, "DNA" for DNA and "RNA"
+                        for RNA.
+  -d DIST_MEASURE, --dist-measure DIST_MEASURE
+                        Distance function to be used to compute distance
+                        between sequences (Jukes-Cantor by default):
+                        "P_DISTANCE" for p-distance, "POISSON_CORRECTED" for
+                        Poisson correction and "JUKES_CANTOR" for Jukes-
+                        Cantor.
+  -f OUT_FORM, --out-form OUT_FORM
+                        The output formats for the resulting tree as a comma
+                        separated list. Possible options: "PRINT" prints the
+                        tree to command line, "NEWICK" saves the tree in
+                        newick format to a file in the input directory,
+                        "IMAGE_PNG" saves the tree as a PNG image in the input
+                        directory, "IMAGE_SVG" saves the tree as a PNG image
+                        in the input directory, "GUI" shows the tree in a
+                        graphical viewer.
+  -t TREE_TYPE, --tree-type TREE_TYPE
+                        The type of the tree to be rendered. The default is
+                        circular. Can be one of: "CIRC" for circular or "RECT"
+                        for rectangular.
+
+For more info see the GitHub page (https://github.com/martin-
+sicho/PTreeGenerator) or contact 'sichom@vscht.cz'.
+```
 
 # Source Code
 
