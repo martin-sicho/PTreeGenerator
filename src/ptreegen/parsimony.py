@@ -1,3 +1,9 @@
+## @package parsimony
+# Contains two classes (ptreegen::parsimony::SmallParsimony
+# and ptreegen::parsimony::LargeParsimony) that implement
+# the basic steps of the parsimony approach to tree building.
+#
+
 from random import shuffle
 
 from ete2 import Tree
@@ -5,9 +11,25 @@ from Bio.Align import MultipleSeqAlignment
 
 from utilities import *
 
-
+##
+# Represents a solution to the small parsimony problem
+# (tree is known and we are intersted
+# in the parsimony score of the tree).
+#
+# It implements the Fitch's algorithm to score the tree,
+# therefore the input tree should be a rooted binary tree,
+# even though this implementation is extended to work with any
+# type of tree.
+#
 class SmallParsimony:
 
+    ##
+    # Constructor takes tree and a corresponding alignment as input
+    # and saves references to them as SmallParsimony::_tree
+    # and SmallParsimony::_alignment.
+    #
+    # @param tree the tree to be scored
+    # @param alignment alignment corresponding to the input tree
     def __init__(self, tree, alignment):
         self._tree = tree
         self._alignment = alignment
@@ -22,25 +44,43 @@ class SmallParsimony:
                                    + ") does not match any leaf in tree:\n" + repr(tree))
 
         self._treeCharacterDict = dict()
-        self._cost = 0
+        self._cost = float('inf')
 
-        self.solve()
-
+    ##
+    # A getter for the cost value. Calls the
+    # SmallParsimony::_solve() method to compute it.
+    #
     @property
     def cost(self):
+        self._cost = 0
+        self._solve()
         return self._cost
 
-    def solve(self):
+    ##
+    # Iteraterates over each column of the alignment
+    # and computes the parsimony score for each.
+    # It calls the SmallParsimony::_assign() method
+    # to score each column and add the score to
+    # the SmallParsimony::_cost member.
+    #
+    def _solve(self):
         for col_idx in range(self._alignment.get_alignment_length()):
             self._treeCharacterDict = dict()
-            self.assign(self._tree, col_idx)
+            self._assign(self._tree, col_idx)
 
-    def assign(self, node, site_idx):
+    ##
+    # Recursive method implementing the Fitch's algorithm.
+    # It traverses the tree from an arbitrary node (preferably root)
+    # and computes the overall parsimony score.
+    #
+    # @param node the node to start traversing the tree from (preferably root)
+    # @param site_idx index of the column in the alignment that is being processed
+    def _assign(self, node, site_idx):
         if node.is_leaf():
             self._treeCharacterDict[node] = set(self._seqencesDict[node.name][site_idx])
         else:
             for child in node.children:
-                self.assign(child, site_idx)
+                self._assign(child, site_idx)
 
             character_set = set(self._treeCharacterDict[node.children[0]])
             for child in node.children:
@@ -53,6 +93,18 @@ class SmallParsimony:
                     character_set.update(self._treeCharacterDict[child])
                 self._treeCharacterDict[node] = character_set
                 self._cost += 1
+    ##
+    # @var _tree
+    # Refernce to the tree being scored.
+    # @var _alignment
+    # Refernce to the coresponding alignment.
+    # @var _treeCharacterDict
+    # A dictionary that stores the character sets asigned to each node
+    # everytime the SmallParsimony::_assign() method is executed
+    # for each column of the alignment.
+    # @var _cost
+    # Variable to store the intermediate results.
+    #
 
 class LargeParsimony:
 
