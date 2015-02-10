@@ -7,10 +7,12 @@ from Bio.Alphabet import generic_protein, generic_dna, generic_rna
 from Bio.Align import MultipleSeqAlignment
 from Bio.SeqRecord import SeqRecord
 
-from ptreegen.enums import *
+from enums import *
 import distance_functions as dfuncs
 from neighbor_joining import NeighborJoining
-from ptreegen.parsimony import LargeParsimony
+from parsimony import LargeParsimony
+import visualization
+
 
 
 
@@ -37,8 +39,10 @@ class Computation:
         self.options = options
         self.parseOptions(self.options)
         self.alignment = self.cleanAlignment(self.alignment)
+        self.checkAlignment()
         self.distanceMatrix = None
         self.tree = self.computeTree()
+        self.visualization = visualization.Visualization(self.tree, self.options)
 
     ##
     # Parses the options passed to the constructor
@@ -74,6 +78,19 @@ class Computation:
             self.distFunction = dfuncs.jukes_cantor
         else:
             raise RuntimeError("Unknown distance measure: " + options["dist_measure"])
+
+    ##
+    # Checks the input alignment for duplicate
+    # taxa id strings.
+    #
+    def checkAlignment(self):
+        found = set()
+        for x in self.alignment:
+            if x.id in found:
+                raise RuntimeError("Duplicate taxa identification strings found: " + x.id)
+            else:
+                found.add(x.id)
+
     ##
     # Method that delegates tree computation
     # to the appropriate module.
@@ -168,6 +185,9 @@ class Computation:
             cleaned_alignment.append(SeqRecord(seq.toseq(), id=record.id))
 
         return cleaned_alignment
+
+    def showResults(self):
+        self.visualization.show()
 
     ##
     # @var algorithm

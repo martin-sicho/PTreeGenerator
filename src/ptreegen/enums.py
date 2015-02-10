@@ -25,6 +25,19 @@ DistMeasures = enum(
     JUKES_CANTOR = "JUKES_CANTOR",
 )
 
+OutputForm = enum(
+    NEWICK = "NEWICK",
+    IMAGE_PNG = "IMAGE_PNG",
+    IMAGE_SVG = "IMAGE_SVG",
+    GUI = "GUI",
+    PRINT = "PRINT",
+)
+
+TreeType = enum(
+    CIRC = "CIRC",
+    RECT = "RECT",
+)
+
 ##
 # @var TreeBuildAlgorithms
 # This enum contains possible algorithm choices.

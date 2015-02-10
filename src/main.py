@@ -12,7 +12,8 @@ import ptreegen
 # when the program is run.
 def main():
     description="This is a simple tool for generating phylogenetic trees from multiple sequence alignments. " \
-                "It was created as a school project for a bioinformatics algorithms course."
+                "It implements two tree building approaches (Neigbor-Joining and Maximum Parsimony)." \
+                "It can also do some simple visualizations and export the tree in the Newick format."
     epilog = "For more info see the GitHub page (https://github.com/martin-sicho/PTreeGenerator) " \
              "or contact 'sichom@vscht.cz'."
     arg_parser = ArgumentParser(prog="ptreegen", description=description, epilog=epilog)
@@ -30,7 +31,7 @@ def main():
                             + ptreegen.TreeBuildAlgorithms.PARSIMONY + '" for a parsimony method. '
                             + 'Neigbor joining is the default method.'
                             )
-    arg_parser.add_argument('-t'
+    arg_parser.add_argument('-i'
                             , '--pars-tree-count'
                             , action='store'
                             , default=1000
@@ -80,9 +81,33 @@ def main():
                                    + ptreegen.DistMeasures.JUKES_CANTOR + '" for Jukes-Cantor.'
     )
 
+    # visualization arguments
+    arg_parser.add_argument('-f'
+                            , '--out-form'
+                            , action='store'
+                            , default=ptreegen.OutputForm.PRINT + "," + ptreegen.OutputForm.NEWICK
+                            , help='The output formats for the resulting tree as a comma separated list. '
+                                   + 'Possible options: "'
+                                   + ptreegen.OutputForm.PRINT + '" prints the tree to command line, "'
+                                   + ptreegen.OutputForm.NEWICK + '" saves the tree in newick format to a file in the input directory, "'
+                                   + ptreegen.OutputForm.IMAGE_PNG + '" saves the tree as a PNG image in the input directory, "'
+                                   + ptreegen.OutputForm.IMAGE_SVG + '" saves the tree as a PNG image in the input directory, "'
+                                   + ptreegen.OutputForm.GUI + '" shows the tree in a graphical viewer.'
+    )
+    arg_parser.add_argument('-t'
+                            , '--tree-type'
+                            , action='store'
+                            , default=ptreegen.TreeType.CIRC
+                            , help='The type of the tree to be rendered. '
+                                   + 'The default is circular. Can be one of: "'
+                                   + ptreegen.TreeType.CIRC + '" for circular or "'
+                                   + ptreegen.TreeType.RECT + '" for rectangular.'
+    )
+
+
     arguments = arg_parser.parse_args()
     results = ptreegen.Computation(vars(arguments))
-    results.tree.show()
+    results.showResults()
 
     return 0
 
