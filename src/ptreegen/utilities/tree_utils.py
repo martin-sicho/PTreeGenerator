@@ -33,6 +33,7 @@ def initEdgeLengths(tree, value):
     tree.dist = value
     for desc in tree.iter_descendants():
         desc.dist = value
+        
 ##
 # Returns weighted consensus tree. Uses 50% majority rule.
 #

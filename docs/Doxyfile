@@ -209,7 +209,7 @@ REFERENCED_BY_RELATION = YES
 # then for each documented function all documented entities
 # called/used by that function will be listed.
 
-REFERENCES_RELATION    = NO
+REFERENCES_RELATION    = YES
 
 # If the REFERENCES_LINK_SOURCE tag is set to YES (the default)
 # and SOURCE_BROWSER tag is set to YES, then the hyperlinks from
@@ -227,21 +227,3 @@ REFERENCES_LINK_SOURCE = YES
 # generate Latex output.
 
 GENERATE_LATEX         = NO
-
-#---------------------------------------------------------------------------
-# Configuration options related to the dot tool
-#---------------------------------------------------------------------------
-
-# If the CLASS_DIAGRAMS tag is set to YES (the default) Doxygen will
-# generate a inheritance diagram (in HTML, RTF and LaTeX) for classes with base
-# or super classes. Setting the tag to NO turns the diagrams off. Note that
-# this option also works with HAVE_DOT disabled, but it is recommended to
-# install and use dot, since it yields more powerful graphs.
-
-CLASS_DIAGRAMS         = YES
-
-# If the UML_LOOK tag is set to YES doxygen will generate inheritance and
-# collaboration diagrams in a style similar to the OMG's Unified Modeling
-# Language.
-
-UML_LOOK               = YES
