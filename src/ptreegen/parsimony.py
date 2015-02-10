@@ -218,11 +218,12 @@ class LargeParsimony:
                     qt_topo_id = self.getTopologyID(quartet)
                     if qt_topo_id == optimal_qt_topo_id and qt_topo_id not in qt_topos_found:
                         qt_topos_found.add(qt_topo_id)
-                        tree_utils.increaseCostOnPath(tree, quartet[0], quartet[1])
+                        self.increaseCostOnPath(tree, quartet[0], quartet[1])
 
                 # choose edge with minimum cost, delete it and add new leaf seq_ids[i]
                 shortest_edge = tree_utils.findShortestEdge(tree)
-                new_node = Tree(name=shortest_edge[0].name + "_" + shortest_edge[1].name)
+                # new_node = Tree(name=shortest_edge[0].name + "_" + shortest_edge[1].name)
+                new_node = Tree()
                 new_node.add_child(name=seq_ids[i])
                 detached = shortest_edge[1].detach()
                 shortest_edge[0].add_child(new_node)
@@ -327,6 +328,46 @@ class LargeParsimony:
         for desc in root.iter_descendants():
             desc.dist = 0
         return root
+
+    ##
+    # Finds a path between two vertices
+    # and then increases the weight of all edges
+    # on that path by one.
+    #
+    # @param tree reference to any vertex of the processed tree
+    # @param start reference to the start node
+    # @param dest reference to the end node
+    @staticmethod
+    def increaseCostOnPath(tree, start, dest):
+        start_node = tree.search_nodes(name=start)[0]
+        end_node = tree.search_nodes(name=dest)[0]
+        node_from = dict()
+        to_visit = set()
+        visited = set()
+
+        to_visit.add(start_node)
+        node_from[start_node] = None
+        path_found = False
+        while to_visit and not path_found:
+            current = to_visit.pop()
+            neighbors = set(current.children)
+            if current.up:
+                neighbors.add(current.up)
+            for neighbor in neighbors:
+                if neighbor not in visited:
+                    node_from[neighbor] = current
+                    if neighbor == end_node:
+                        path_found = True
+                        break
+                    else:
+                        to_visit.add(neighbor)
+            visited.add(current)
+
+        node = end_node
+        while node:
+            if node.name != "Left":
+                node.dist += 1
+            node = node_from[node]
 
     ##
     # @var _qpSteps

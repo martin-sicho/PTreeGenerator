@@ -1,8 +1,20 @@
+## @package tree_utils
+# Defines a number of functions
+# that can be used to manipulate a tree.
+#
+
 from sys import stderr
 
 from ete2 import Tree
 
-
+##
+# Finds the two vertices with minimal edge weight.
+# If there are more minimal edges with the same
+# weight, the first one found is returned.
+#
+# @param tree reference to any vertex of the processed tree
+# @return a tuple of size two which contains the two vertices connected
+# with the shortest edge
 def findShortestEdge(tree):
     shortest_edge = [None, None]
     min_dist = float("inf")
@@ -12,51 +24,23 @@ def findShortestEdge(tree):
             shortest_edge[1] = node
     return tuple(shortest_edge)
 
-def increaseCostOnPath(tree, start, dest):
-    start_node = tree.search_nodes(name=start)[0]
-    end_node = tree.search_nodes(name=dest)[0]
-    node_from = dict()
-    to_visit = set()
-    visited = set()
-
-    to_visit.add(start_node)
-    node_from[start_node] = None
-    path_found = False
-    while to_visit and not path_found:
-        current = to_visit.pop()
-        neighbors = set(current.children)
-        if current.up:
-            neighbors.add(current.up)
-        for neighbor in neighbors:
-            if neighbor not in visited:
-                node_from[neighbor] = current
-                if neighbor == end_node:
-                    path_found = True
-                    break
-                else:
-                    to_visit.add(neighbor)
-        visited.add(current)
-
-    node = end_node
-    while node:
-        if node.name != "Left":
-            node.dist += 1
-        node = node_from[node]
-
+##
+# Initializes all edges in the tree to a given value.
+#
+# @param tree reference to any vertex of the processed tree
+# @param value a single value for the edge lengths to be initialized to
 def initEdgeLengths(tree, value):
     tree.dist = value
     for desc in tree.iter_descendants():
         desc.dist = value
-
+##
+# Returns weighted consensus tree. Uses 50% majority rule.
+#
+# It is a very slightly modified version of
+# Francois-Jose Serra's code (accesible from here:
+# https://github.com/fransua/utils/blob/master/pmodeltest/consensus.py).
+#
 def findConsensusTree(trees,weights=[],lim=0):
-    """
-    Returns weighted consensus tree. Uses 50% majority rule.
-
-    It is a modified version of
-    Francois-Jose Serra's code (accesible from here:
-    https://github.com/fransua/utils/blob/master/pmodeltest/consensus.py).
-    """
-
     if weights == []:
         weights = [1] * len (trees)
     dic = {}
