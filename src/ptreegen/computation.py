@@ -16,6 +16,7 @@ import visualization
 
 
 
+
 ##
 # Parses user specified options and delegetes
 # appropriate actions to other modules. Also serves as
@@ -36,6 +37,7 @@ class Computation:
         self.pairCutoff = None
         self.seqType = None
         self.distFunction = None
+        self.parsIterCnt = None
         self.options = options
         self.parseOptions(self.options)
         self.alignment = self.cleanAlignment(self.alignment)
@@ -52,6 +54,7 @@ class Computation:
         self.algorithm = options["method"]
         if self.algorithm not in (TreeBuildAlgorithms.NJ, TreeBuildAlgorithms.PARSIMONY):
             raise RuntimeError("Unknown method: " + self.algorithm)
+        self.parsIterCnt = options["pars_tree_count"]
         self.gapPenalty = options["gap_penalty"]
         if self.gapPenalty < 0 or self.gapPenalty > 1:
             raise RuntimeError("Bad gap penalty value. Must be between 0 and 1. Got: " + self.gapPenalty)
@@ -101,7 +104,7 @@ class Computation:
             self.distanceMatrix = self.computeDistanceMatrix(self.alignment, self.distFunction)
             return NeighborJoining(self.distanceMatrix, self.alignment).tree
         elif self.algorithm == TreeBuildAlgorithms.PARSIMONY:
-            return LargeParsimony(self.alignment).tree
+            return LargeParsimony(self.alignment, steps=self.parsIterCnt).tree
         else:
             raise RuntimeError(self.algorithm + " not implemented.")
 
