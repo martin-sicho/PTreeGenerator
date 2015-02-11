@@ -57,8 +57,6 @@ class NeighborJoining:
             assert d_ij > 0
             d_ik = 0.5 * d_ij + 0.5 * (self._distMatrix.getSeparation(node_i.name) - self._distMatrix.getSeparation(node_j.name))
             d_jk = 0.5 * d_ij + 0.5 * (self._distMatrix.getSeparation(node_j.name) - self._distMatrix.getSeparation(node_i.name))
-            assert d_jk > 0
-            assert d_ik > 0
 
             tree.remove_child(node_i)
             tree.remove_child(node_j)
