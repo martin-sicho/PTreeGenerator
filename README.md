@@ -1,7 +1,7 @@
 # Introduction
 A sort of primitive command line tool which lets the user input a multiple sequence alignment in FASTA format and then generates an unrooted phylogenetic tree from it. For more information on the functionality see the **[Usage](#usage)** section of this README.
 
-This project was created as a part of a bioinformatics algorithms course at my university. It is nothing great, but does the job. If you are interested in the source code see the **[Source Code](#source-code)** section of this README or jump straight to the [documentation](http://web.vscht.cz/~sichom/PTreeGen/docs/namespaceptreegen.html).
+This project was created as a part of a bioinformatics algorithms course at my university. It is nothing great, but does the job. If you are interested in the source code, see the **[Source Code](#source-code)** section of this README or jump straight to the [documentation](http://web.vscht.cz/~sichom/PTreeGen/docs/namespaceptreegen.html).
 
 # Installation
 The program is written in the Python programming language so you will need a working Python interpreter. It should work fine with any 2.7.x series of the interpreter.

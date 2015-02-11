@@ -67,7 +67,7 @@ def jukes_cantor(seq1, seq2, *args, **kwargs):
     p_dist = p_distance(seq1, seq2, *args, **kwargs)
     if kwargs["sequence_type"] == SeqTypes.AA:
         return (-19.0/20.0) * math.log(1 - (20.0/19.0) * p_dist)
-    elif kwargs["sequence_type"] == SeqTypes.AA:
+    elif kwargs["sequence_type"] == SeqTypes.DNA or kwargs["sequence_type"] == SeqTypes.RNA:
         return (-3.0/4.0) * math.log(1 - (4.0/3.0) * p_dist)
     else:
         assert False
