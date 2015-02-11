@@ -19,7 +19,7 @@ class TestNeigborJoining(TestCase):
 
     def test___call__(self):
         nj = NeighborJoining(self.test_matrix, names=["A", "B", "C", "D", "E", "F"])
-        # nj.tree.show()
+        print nj.tree
 
 class TestComputation(TestCase):
 
@@ -27,6 +27,9 @@ class TestComputation(TestCase):
         self.options = {
             "method" : ptreegen.TreeBuildAlgorithms.NJ
             , "sequence_type" : ptreegen.SeqTypes.AA
+            , "pars_tree_count" : 1000
+            , "out_form" : ptreegen.OutputForm.PRINT
+            , "tree_type" : ptreegen.TreeType.RECT
             , "alignment_file" : "test_files/keratins_ali.fasta"
             , "no_gaps" : False
             , "no_cleaning" : False
@@ -39,11 +42,6 @@ class TestComputation(TestCase):
     def test___init__(self):
         computation = ptreegen.Computation(self.options)
         computation.tree.show()
-
-        self.options["no_gaps"] = True
-        computation = ptreegen.Computation(self.options)
-        # computation.tree.show()
-
 
 if __name__ == '__main__':
     unittest.main()

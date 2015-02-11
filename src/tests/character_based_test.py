@@ -64,7 +64,7 @@ class TestLargeParsimony(unittest.TestCase):
 
     def test_solve(self):
         parsimony = LargeParsimony(self.alignment)
-        print parsimony.cost
+        self.assertEqual(parsimony.cost, 5)
         # parsimony.tree.show()
 
 class TestComputation(unittest.TestCase):
@@ -73,6 +73,9 @@ class TestComputation(unittest.TestCase):
         self.options = {
             "method" : ptreegen.TreeBuildAlgorithms.PARSIMONY
             , "sequence_type" : ptreegen.SeqTypes.AA
+            , "pars_tree_count" : 1000
+            , "out_form" : ptreegen.OutputForm.PRINT
+            , "tree_type" : ptreegen.TreeType.RECT
             , "alignment_file" : "test_files/keratins_ali.fasta"
             , "no_gaps" : False
             , "no_cleaning" : False
@@ -86,13 +89,13 @@ class TestComputation(unittest.TestCase):
         computation = ptreegen.Computation(self.options)
         sml_prs = SmallParsimony(computation.tree, computation.alignment)
         print sml_prs.cost
-        computation.tree.show()
+        print computation.tree
 
         self.options["method"] = ptreegen.TreeBuildAlgorithms.NJ
         computation = ptreegen.Computation(self.options)
         sml_prs = SmallParsimony(computation.tree, computation.alignment)
         print sml_prs.cost
-        # computation.tree.show()
+        print computation.tree
 
 if __name__ == '__main__':
     unittest.main()
